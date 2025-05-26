@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна Робота №2. Рядки</title>
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .task {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лабораторна робота №2 - Робота з рядками</h1>
+
+    <!-- Завдання 1 -->
+    <div class="task">
+        <h3>Завдання 1: Число у текстовий вигляд</h3>
+        <input type="number" id="numInput" min="10" max="99" placeholder="Введіть двозначне число">
+        <button onclick="task1()">Перетворити</button>
+        <p id="task1Result"></p>
+    </div>
+
+    <!-- Завдання 2 -->
+    <div class="task">
+        <h3>Завдання 2: Перетворення в CamelCase</h3>
+        <input type="text" id="kebabInput" placeholder="Наприклад: font-size">
+        <button onclick="task2()">Перетворити</button>
+        <p id="task2Result"></p>
+    </div>
+
+    <!-- Завдання 3 -->
+    <div class="task">
+        <h3>Завдання 3: Перетворення в kebab-case</h3>
+        <input type="text" id="camelInput" placeholder="Наприклад: fontSize">
+        <button onclick="task3()">Перетворити</button>
+        <p id="task3Result"></p>
+    </div>
+
+    <!-- Завдання 4 -->
+    <div class="task">
+        <h3>Завдання 4: Калькулятор рядків</h3>
+        <input type="text" id="calcInput" placeholder="Наприклад: 3 + 4">
+        <button onclick="task4()">Обчислити</button>
+        <p id="task4Result"></p>
+    </div>
+
+    <!-- Завдання 5 -->
+    <div class="task">
+        <h3>Завдання 5: Форматування дат</h3>
+        <textarea id="dateText" rows="4" cols="50" placeholder="Введіть текст з датами у форматі рррр/мм/дд"></textarea>
+        <button onclick="task5()">Форматувати</button>
+        <p id="task5Result"></p>
+    </div>
+
+    <script>
+        // Завдання 1: Число у текстовий вигляд
+        function task1() {
+            const number = parseInt(document.getElementById("numInput").value);
+            if (number < 10 || number > 99) {
+                document.getElementById("task1Result").textContent = "Будь ласка, введіть двозначне число!";
+                return;
+            }
+
+            const units = ["", "один", "два", "три", "чотири", "п'ять", "шість", "сім", "вісім", "дев'ять"];
+            const teens = ["десять", "одинадцять", "дванадцять", "тринадцять", "чотирнадцять", 
+                          "п'ятнадцять", "шістнадцять", "сімнадцять", "вісімнадцять", "дев'ятнадцять"];
+            const tens = ["", "десять", "двадцять", "тридцять", "сорок", "п'ятдесят", 
+                         "шістдесят", "сімдесят", "вісімдесят", "дев'яносто"];
+
+            let result;
+            if (number < 20) {
+                result = teens[number - 10];
+            } else {
+                const ten = Math.floor(number / 10);
+                const unit = number % 10;
+                result = tens[ten] + (unit !== 0 ? " " + units[unit] : "");
+            }
+
+            document.getElementById("task1Result").textContent = result;
+        }
+
+        // Завдання 2: Перетворення в CamelCase
+        function task2() {
+            const kebab = document.getElementById("kebabInput").value;
+            const camel = kebab.replace(/-([a-z])/g, (match, group) => group.toUpperCase());
+            document.getElementById("task2Result").textContent = camel;
+        }
+
+        // Завдання 3: Перетворення в kebab-case
+        function task3() {
+            const camel = document.getElementById("camelInput").value;
+            const kebab = camel.replace(/[A-Z]/g, match => "-" + match.toLowerCase());
+            document.getElementById("task3Result").textContent = kebab;
+        }
+
+        // Завдання 4: Калькулятор рядків
+        function task4() {
+            const input = document.getElementById("calcInput").value.trim();
+            const parts = input.split(/\s+/);
+            if (parts.length !== 3 || isNaN(parts[0]) || isNaN(parts[2])) {
+                document.getElementById("task4Result").textContent = "Невірний формат! Приклад: 3 + 4";
+                return;
+            }
+
+            const a = parseFloat(parts[0]);
+            const op = parts[1];
+            const b = parseFloat(parts[2]);
+            let result;
+
+            switch (op) {
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+                case '/': result = a / b; break;
+                default: 
+                    document.getElementById("task4Result").textContent = "Невідома операція!";
+                    return;
+            }
+
+            document.getElementById("task4Result").textContent = `${input} = ${result}`;
+        }
+
+        // Завдання 5: Форматування дат
+        function task5() {
+            const text = document.getElementById("dateText").value;
+            const formatted = text.replace(/(\d{4})\/(\d{2})\/(\d{2})/g, "$3.$2.$1");
+            document.getElementById("task5Result").textContent = formatted || "Вказану дату не знайдено!";
+        }
+    </script>
+</body>
+</html>

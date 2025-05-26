@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна №3 - Функції, Дата, RegExp</title>
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .task {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лабораторна робота №3</h1>
+    <h2>Функції, Дата та час, Регулярні вирази</h2>
+
+    <!-- Завдання 1.1 -->
+    <div class="task">
+        <h3>1.1 Зміна розміру шрифту</h3>
+        <input type="text" id="textInput" placeholder="Введіть текст">
+        <input type="number" id="fontSizeInput" placeholder="Розмір шрифту (px)">
+        <button onclick="changeFontSize()">Змінити розмір</button>
+        <p id="fontSizeResult"></p>
+    </div>
+
+    <!-- Завдання 1.2 -->
+    <div class="task">
+        <h3>1.2 Створення таблиці з рядків</h3>
+        <textarea id="tableText" rows="4" placeholder="Введіть рядки через кому"></textarea>
+        <button onclick="createTable()">Створити таблицю</button>
+        <div id="tableResult"></div>
+    </div>
+
+    <!-- Завдання 1.3 -->
+    <div class="task">
+        <h3>1.3 Створення заголовків</h3>
+        <input type="number" id="headersCount" placeholder="Кількість заголовків">
+        <button onclick="createHeaders()">Створити заголовки</button>
+        <div id="headersResult"></div>
+    </div>
+
+    <!-- Завдання 1.4 -->
+    <div class="task">
+        <h3>1.4 Обробка параметрів</h3>
+        <input type="text" id="paramsInput" placeholder="Введіть параметри через кому">
+        <button onclick="processParams()">Обробити</button>
+        <p id="numbersResult"></p>
+        <p id="sentenceResult"></p>
+    </div>
+
+    <!-- Завдання 2.1 -->
+    <div class="task">
+        <h3>2.1 Поточна дата</h3>
+        <button onclick="showCurrentDate()">Показати поточну дату</button>
+        <div id="currentDate"></div>
+    </div>
+
+    <!-- Завдання 2.2 -->
+    <div class="task">
+        <h3>2.2 Форматування дати</h3>
+        <input type="text" id="dateInput" placeholder="Введіть дату (дд.мм.рррр)">
+        <button onclick="formatDate()">Форматувати</button>
+        <p id="dateResult"></p>
+    </div>
+
+    <!-- Завдання 3.1 -->
+    <div class="task">
+        <h3>3.1 Пошук дат у тексті</h3>
+        <textarea id="dateText" rows="4" placeholder="Введіть текст з датами у форматі РРРР-ММ-ДД"></textarea>
+        <button onclick="findDates()">Знайти дати</button>
+        <p id="datesFound"></p>
+    </div>
+
+    <!-- Завдання 3.2 -->
+    <div class="task">
+        <h3>3.2 Перетворення snake_case в camelCase</h3>
+        <input type="text" id="snakeInput" placeholder="Введіть snake_case">
+        <button onclick="toCamelCase()">Перетворити</button>
+        <p id="camelResult"></p>
+    </div>
+
+    <!-- Завдання 3.3 -->
+    <div class="task">
+        <h3>3.3 Перетворення camelCase в snake_case</h3>
+        <input type="text" id="camelInput" placeholder="Введіть camelCase">
+        <button onclick="toSnakeCase()">Перетворити</button>
+        <p id="snakeResult"></p>
+    </div>
+
+    <!-- Завдання 3.4 -->
+    <div class="task">
+        <h3>3.4 Пошук кольорів у тексті</h3>
+        <textarea id="colorText" rows="4" placeholder="Введіть текст з кольорами (#ABC або #ABCDEF)"></textarea>
+        <button onclick="findHexColor()">Знайти кольори</button>
+        <p id="colorsFound"></p>
+    </div>
+
+    <script>
+        // 1.1 Зміна розміру шрифту
+        function changeFontSize() {
+            const text = document.getElementById("textInput").value;
+            const size = document.getElementById("fontSizeInput").value;
+            const result = document.getElementById("fontSizeResult");
+            result.innerHTML = text;
+            result.style.fontSize = size + "px";
+        }
+
+        // 1.2 Створення таблиці
+        function createTable() {
+            const text = document.getElementById("tableText").value;
+            const rows = text.split(",").map(item => item.trim());
+            let tableHTML = "<table>";
+            
+            rows.forEach(row => {
+                tableHTML += `<tr><td>${row}</td></tr>`;
+            });
+            
+            tableHTML += "</table>";
+            document.getElementById("tableResult").innerHTML = tableHTML;
+        }
+
+        // 1.3 Створення заголовків
+        function createHeaders() {
+            const count = parseInt(document.getElementById("headersCount").value);
+            const container = document.getElementById("headersResult");
+            container.innerHTML = "";
+            
+            for (let i = 1; i <= count; i++) {
+                const header = document.createElement("h2");
+                header.textContent = `Header${i}`;
+                container.appendChild(header);
+            }
+        }
+
+        // 1.4 Обробка параметрів
+        function processParams() {
+            const input = document.getElementById("paramsInput").value;
+            const params = input.split(",").map(item => item.trim());
+            const numbers = [];
+            const words = [];
+            
+            params.forEach(param => {
+                if (!isNaN(param)) {
+                    numbers.push(parseFloat(param));
+                } else {
+                    words.push(param);
+                }
+            });
+            
+            const sum = numbers.reduce((a, b) => a + b, 0);
+            const max = Math.max(...numbers);
+            const sentence = words.join(" ");
+            
+            document.getElementById("numbersResult").textContent = 
+                `Сума: ${sum}, Максимальне: ${isFinite(max) ? max : "немає чисел"}`;
+            document.getElementById("sentenceResult").textContent = 
+                `Речення: ${sentence}`;
+        }
+
+        // 2.1 Поточна дата
+        function showCurrentDate() {
+            const now = new Date();
+            const months = [
+                "січня", "лютого", "березня", "квітня", "травня", "червня",
+                "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"
+            ];
+            const days = [
+                "неділя", "понеділок", "вівторок", "середа",
+                "четвер", "п'ятниця", "субота"
+            ];
+            
+            const dateStr = `Дата: ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} року`;
+            const dayStr = `День тижня: ${days[now.getDay()]}`;
+            const timeStr = `Час: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            document.getElementById("currentDate").innerHTML = `
+                <p>${dateStr}</p>
+                <p>${dayStr}</p>
+                <p>${timeStr}</p>
+            `;
+        }
+
+        // 2.2 Форматування дати
+        function formatDate() {
+            const input = document.getElementById("dateInput").value;
+            const dateParts = input.split(/[./-]/);
+            if (dateParts.length !== 3) {
+                document.getElementById("dateResult").textContent = "Невірний формат дати";
+                return;
+            }
+            
+            const day = parseInt(dateParts[0]);
+            const month = parseInt(dateParts[1]) - 1;
+            const year = parseInt(dateParts[2]);
+            const inputDate = new Date(year, month, day);
+            
+            if (isNaN(inputDate.getTime())) {
+                document.getElementById("dateResult").textContent = "Невірна дата";
+                return;
+            }
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const diffTime = today - inputDate.setHours(0, 0, 0, 0);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            let result;
+            if (diffDays === 0) {
+                result = "Сьогодні";
+            } else if (diffDays === 1) {
+                result = "Вчора";
+            } else if (diffDays >= 2 && diffDays <= 6) {
+                result = `${diffDays} днів тому`;
+            } else if (diffDays === 7) {
+                result = "Тиждень тому";
+            } else if (diffDays >= 365) {
+                result = "Рік тому";
+            } else {
+                result = `${year}.${(month + 1).toString().padStart(2, '0')}.${day.toString().padStart(2, '0')}`;
+            }
+            
+            document.getElementById("dateResult").textContent = result;
+        }
+
+        // 3.1 Пошук дат у тексті
+        function findDates() {
+            const text = document.getElementById("dateText").value;
+            const dateRegex = /\b\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])\b/g;
+            const dates = text.match(dateRegex) || [];
+            
+            document.getElementById("datesFound").textContent = 
+                dates.length > 0 ? "Знайдені дати: " + dates.join(", ") : "Дати не знайдено";
+        }
+
+        // 3.2 Перетворення snake_case в camelCase
+        function toCamelCase() {
+            const snake = document.getElementById("snakeInput").value;
+            const camel = snake.replace(/_([a-z])/g, (match, group) => group.toUpperCase());
+            document.getElementById("camelResult").textContent = camel;
+        }
+
+        // 3.3 Перетворення camelCase в snake_case
+        function toSnakeCase() {
+            const camel = document.getElementById("camelInput").value;
+            const snake = camel.replace(/[A-Z]/g, match => "_" + match.toLowerCase());
+            document.getElementById("snakeResult").textContent = snake;
+        }
+
+        // 3.4 Пошук кольорів у тексті
+        function findHexColor() {
+            const text = document.getElementById("colorText").value;
+            const colorRegex = /#([A-Fa-f0-9]{3}){1,2}\b/g;
+            const colors = text.match(colorRegex) || [];
+            
+            document.getElementById("colorsFound").textContent = 
+                colors.length > 0 ? "Знайдені кольори: " + colors.join(", ") : "Кольори не знайдено";
+        }
+    </script>
+</body>
+</html>

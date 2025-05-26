@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Лабораторна робота №4 - DOM</title>
+  <style>
+    .active { background-color: lightblue; }
+    .gallery img { filter: grayscale(100%); opacity: 0.5; cursor: pointer; transition: 0.3s; }
+    .gallery img.active { filter: grayscale(0%); opacity: 1; }
+    .section-focus { border: 2px solid transparent; padding: 10px; }
+    .section-focus.active { border-color: blue; }
+    #resizeBox { width: 100px; height: 100px; background: lightcoral; transition: 0.5s; }
+    .slider-container img { display: none; width: 20%; transition: 0.5s; }
+    .slider-container img.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- Завдання 1 -->
+<section>
+  <h2>Завдання 1</h2>
+  <label><input type="checkbox" value="Barcelona"> Barcelona</label>
+  <label><input type="checkbox" value="Liverpool"> Liverpool</label>
+  <label><input type="checkbox" value="Milan"> Milan</label>
+  <label><input type="checkbox" value="Dortmund"> Dortmund</label>
+  <button onclick="task1()">Показати вибране</button>
+  <p id="result1"></p>
+</section>
+
+<!-- Завдання 2 -->
+<section>
+  <h2>Завдання 2</h2>
+  <label><input type="checkbox" value="alexsaelemakers@gmail.com" onchange="task2(this)"> alexsaelemakers@gmail.com</label><br>
+  <label><input type="checkbox" value="radekrunic@gmail.com" onchange="task2(this)"> radekrunic@gmail.com</label><br>
+  <div id="emails"></div>
+</section>
+
+<!-- Завдання 3 -->
+<section>
+  <h2>Завдання 3</h2>
+  <p>Рахунок: <span id="score3">0</span></p>
+  <button onclick="nextQuestion3()">Наступне завдання</button>
+  <p id="question3"></p>
+  <div id="answers3"></div>
+  <p id="feedback3"></p>
+</section>
+
+<!-- Завдання 4 -->
+<section>
+  <h2>Завдання 4</h2>
+  <p>Рахунок: <span id="score4">0</span></p>
+  <button onclick="nextQuestion4()">Наступне завдання</button>
+  <p id="question4"></p>
+  <input id="answer4" type="number">
+  <button onclick="checkAnswer4()">Перевірити</button>
+  <p id="feedback4"></p>
+</section>
+
+<!-- Завдання 5 -->
+<section class="gallery">
+  <h2>Завдання 5</h2>
+  <img src="https://img.a.transfermarkt.technology/portrait/big/460939-1676466080.jpg?lm=1" onclick="toggleImage(this)">
+  <img src="https://img.a.transfermarkt.technology/portrait/big/937958-1720606123.jpg?lm=1" onclick="toggleImage(this)">
+  <img src="https://img.a.transfermarkt.technology/portrait/big/148455-1727337594.jpg?lm=1" onclick="toggleImage(this)">
+</section>
+
+<!-- Завдання 6 -->
+<section>
+  <h2>Завдання 6</h2>
+  <div class="section-focus">
+    <input type="text" onfocus="activateSection(this)">
+  </div>
+  <div class="section-focus">
+    <input type="email" onfocus="activateSection(this)">
+  </div>
+</section>
+
+<!-- Завдання 7 -->
+<section>
+  <h2>Завдання 7</h2>
+  <div id="resizeBox"></div>
+  <input type="range" min="50" max="300" oninput="resizeBox(this.value)">
+  <input type="range" min="0" max="360" oninput="rotateBox(this.value)">
+</section>
+
+<!-- Завдання 8 -->
+<section>
+  <h2>Завдання 8</h2>
+  <img id="img8" src="https://img.a.transfermarkt.technology/portrait/big/21415-1558510390.jpg?lm=1" width="100" height="100">
+  <button onclick="toggleSize()">Змінити розмір</button>
+</section>
+
+<!-- Завдання 9 -->
+<section>
+  <h2>Завдання 9</h2>
+  <ul>
+    <li>Футболка <button onclick="addToCart('Футболка')">Замовити</button></li>
+    <li>Олімпійка <button onclick="addToCart('Олімпійка')">Замовити</button></li>
+  </ul>
+  <p>Кошик: <span id="cart"></span></p>
+</section>
+
+<!-- Завдання 10 -->
+<section>
+  <h2>Завдання 10</h2>
+  <div class="slider-container" onclick="nextSlide()">
+    <img src="https://img.a.transfermarkt.technology/portrait/header/74857-1674465246.jpg?lm=1" class="active">
+    <img src="https://img.a.transfermarkt.technology/portrait/medium/44058-1744278078.jpg?lm=1">
+    <img src="https://img.a.transfermarkt.technology/portrait/medium/705395-1730119053.jpg?lm=1">
+    <img src="https://img.a.transfermarkt.technology/portrait/medium/398184-1699383547.jpg?lm=1">
+    <img src="https://img.a.transfermarkt.technology/portrait/medium/646740-1682685701.jpg?lm=1">
+  </div>
+</section>
+
+<script>
+function task1() {
+  const selected = [...document.querySelectorAll('section:nth-of-type(1) input:checked')]
+    .map(cb => cb.value);
+  document.getElementById('result1').textContent = selected.join(', ');
+}
+
+function task2(checkbox) {
+  const container = document.getElementById('emails');
+  if (checkbox.checked) {
+    const span = document.createElement('span');
+    span.textContent = checkbox.value + " ";
+    span.dataset.email = checkbox.value;
+    container.appendChild(span);
+  } else {
+    const span = container.querySelector(`[data-email="${checkbox.value}"]`);
+    if (span) container.removeChild(span);
+  }
+}
+
+let score3 = 0;
+function nextQuestion3() {
+  const a = Math.floor(Math.random() * 10), b = Math.floor(Math.random() * 10);
+  const correct = a * b;
+  document.getElementById('question3').textContent = `${a} × ${b} = ?`;
+  const answersDiv = document.getElementById('answers3');
+  answersDiv.innerHTML = '';
+  const options = [correct, correct + 1, correct - 1, correct + 2].sort(() => Math.random() - 0.5);
+  options.forEach(opt => {
+    const rb = document.createElement('input');
+    rb.type = 'radio'; rb.name = 'mult'; rb.value = opt;
+    rb.onclick = () => {
+      const feedback = document.getElementById('feedback3');
+      if (parseInt(rb.value) === correct) {
+        score3++;
+        feedback.textContent = "Вірно!";
+      } else {
+        feedback.textContent = "Невірно!";
+      }
+      document.getElementById('score3').textContent = score3;
+    };
+    answersDiv.appendChild(rb);
+    answersDiv.appendChild(document.createTextNode(opt));
+    answersDiv.appendChild(document.createElement('br'));
+  });
+}
+
+let score4 = 0, correctAnswer4 = 0;
+function nextQuestion4() {
+  const a = Math.floor(Math.random() * 10), b = Math.floor(Math.random() * 10);
+  correctAnswer4 = a * b;
+  document.getElementById('question4').textContent = `${a} × ${b} = ?`;
+  document.getElementById('feedback4').textContent = '';
+  document.getElementById('answer4').value = '';
+}
+function checkAnswer4() {
+  const val = parseInt(document.getElementById('answer4').value);
+  if (val === correctAnswer4) {
+    score4++;
+    document.getElementById('feedback4').textContent = "Правильно!";
+  } else {
+    document.getElementById('feedback4').textContent = "Неправильно!";
+  }
+  document.getElementById('score4').textContent = score4;
+}
+
+function toggleImage(img) {
+  img.classList.toggle('active');
+}
+
+function activateSection(el) {
+  document.querySelectorAll('.section-focus').forEach(div => div.classList.remove('active'));
+  el.closest('.section-focus').classList.add('active');
+}
+
+function resizeBox(size) {
+  document.getElementById('resizeBox').style.width = size + 'px';
+  document.getElementById('resizeBox').style.height = size + 'px';
+}
+
+function rotateBox(angle) {
+  document.getElementById('resizeBox').style.transform = 'rotate(' + angle + 'deg)';
+}
+
+let imgLarge = false;
+function toggleSize() {
+  const img = document.getElementById('img8');
+  if (!imgLarge) {
+    img.style.width = img.naturalWidth * 2 + 'px';
+    img.style.height = img.naturalHeight * 2 + 'px';
+  } else {
+    img.style.width = img.naturalWidth + 'px';
+    img.style.height = img.naturalHeight + 'px';
+  }
+  imgLarge = !imgLarge;
+}
+
+let cartItems = [];
+function addToCart(item) {
+  cartItems.push(item);
+  document.getElementById('cart').textContent = cartItems.join(', ');
+}
+
+let currentSlide = 0;
+function nextSlide() {
+  const slides = document.querySelectorAll('.slider-container img');
+  slides[currentSlide].classList.remove('active');
+  currentSlide = (currentSlide + 1) % slides.length;
+  slides[currentSlide].classList.add('active');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна №5 - Події</title>
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .task {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            display: inline-block;
+            width: 100px;
+        }
+        .binary-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .binary-square {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+        }
+        .palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .color-box {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            border: 1px solid #000;
+        }
+        .rectangle {
+            width: 200px;
+            height: 100px;
+            border: 2px solid #000;
+            margin-top: 10px;
+        }
+        .editable-block {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .canvas {
+            display: grid;
+            grid-template-columns: repeat(20, 20px);
+            gap: 1px;
+            margin-top: 10px;
+        }
+        .pixel {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .card-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .card {
+            width: 100px;
+            height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+            cursor: pointer;
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 5px;
+        }
+        .card-front {
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 1px solid #000;
+        }
+        .card-back {
+            background: #d00;
+            transform: rotateY(180deg);
+            border: 1px solid #000;
+        }
+        .draggable-container {
+            width: 300px;
+            height: 200px;
+            border: 2px solid #000;
+            position: relative;
+            margin-top: 10px;
+        }
+        .draggable-box {
+            width: 50px;
+            height: 50px;
+            background: #e74c3c;
+            position: absolute;
+            cursor: move;
+        }
+        .message {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .book-list {
+            list-style: none;
+            padding: 0;
+        }
+        .book-item {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .book-item.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .runaway-container {
+            width: 300px;
+            height: 200px;
+            border: 1px solid #000;
+            position: relative;
+            margin-top: 10px;
+        }
+        .runaway-btn {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лабораторна робота №5 - Події</h1>
+
+    <!-- Завдання 1 -->
+    <div class="task">
+        <h2>Завдання 1: Таблиця користувачів</h2>
+        <table id="usersTable">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Ім'я</th>
+                    <th>Прізвище</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Євгеній</td>
+                    <td>Корбіло</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Валерій</td>
+                    <td>Восконян</td>
+                </tr>
+<tr>
+                    <td>3</td>
+                    <td>Аліу</td>
+                    <td>Лукуман</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="form-group">
+            <label for="firstName">Ім'я:</label>
+            <input type="text" id="firstName">
+        </div>
+        <div class="form-group">
+            <label for="lastName">Прізвище:</label>
+            <input type="text" id="lastName">
+        </div>
+        <button onclick="addUser()">Додати користувача</button>
+    </div>
+
+    <!-- Завдання 2 -->
+    <div class="task">
+        <h2>Завдання 2: Бінарні квадратики</h2>
+        <textarea id="binaryInput" rows="4" cols="50" placeholder="Введіть послідовність нулів та одиниць (наприклад: 101010)"></textarea>
+        <button onclick="createBinarySquares()">Створити квадратики</button>
+        <div class="binary-container" id="binaryContainer"></div>
+    </div>
+
+    <!-- Завдання 3 -->
+    <div class="task">
+        <h2>Завдання 3: Палітра кольорів</h2>
+        <div class="palette" id="colorPalette">
+            <div class="color-box" style="background-color: #FF0000;"></div>
+            <div class="color-box" style="background-color: #00FF00;"></div>
+            <div class="color-box" style="background-color: #0000FF;"></div>
+            <div class="color-box" style="background-color: #FFFF00;"></div>
+            <div class="color-box" style="background-color: #FF00FF;"></div>
+            <div class="color-box" style="background-color: #00FFFF;"></div>
+        </div>
+        <div class="rectangle" id="colorRectangle"></div>
+    </div>
+
+    <!-- Завдання 4 -->
+    <div class="task">
+        <h2>Завдання 4: Редагування блоків</h2>
+        <div class="editable-block" id="block1">
+            <p>Це перший блок тексту. Тут може бути будь-яка інформація.</p>
+            <button onclick="editBlock('block1')">Редагувати</button>
+            <button onclick="deleteBlock('block1')">Видалити</button>
+        </div>
+        <div class="editable-block" id="block2">
+            <p>Це другий блок тексту. Він також може бути відредагований або видалений.</p>
+            <button onclick="editBlock('block2')">Редагувати</button>
+            <button onclick="deleteBlock('block2')">Видалити</button>
+        </div>
+    </div>
+
+    <!-- Завдання 5 -->
+    <div class="task">
+        <h2>Завдання 5: Малювання кольором</h2>
+        <div class="palette" id="drawingPalette">
+            <div class="color-box" style="background-color: #FF0000;"></div>
+            <div class="color-box" style="background-color: #00FF00;"></div>
+            <div class="color-box" style="background-color: #0000FF;"></div>
+            <div class="color-box" style="background-color: #000000;"></div>
+            <div class="color-box" style="background-color: #FFFFFF;"></div>
+        </div>
+        <div class="canvas" id="drawingCanvas"></div>
+    </div>
+
+    <!-- Завдання 6 -->
+    <div class="task">
+        <h2>Завдання 6: Гральні карти</h2>
+        <div class="card-container" id="cardContainer">
+            <div class="card" onclick="flipCard(this)">
+                <div class="card-face card-front">A</div>
+                <div class="card-face card-back"></div>
+            </div>
+            <div class="card" onclick="flipCard(this)">
+                <div class="card-face card-front">K</div>
+                <div class="card-face card-back"></div>
+            </div>
+            <div class="card" onclick="flipCard(this)">
+                <div class="card-face card-front">Q</div>
+                <div class="card-face card-back"></div>
+            </div>
+            <div class="card" onclick="flipCard(this)">
+                <div class="card-face card-front">J</div>
+                <div class="card-face card-back"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Завдання 7 -->
+    <div class="task">
+        <h2>Завдання 7: Перетягування елементів</h2>
+        <div class="draggable-container" id="dragContainer">
+            <div class="draggable-box" id="draggableBox" draggable="true"></div>
+        </div>
+    </div>
+
+    <!-- Завдання 8 -->
+    <div class="task">
+        <h2>Завдання 8: Форум</h2>
+        <div id="forumMessages">
+            <div class="message">
+                <h3>Користувач 1</h3>
+                <p>Всім привіт! Це перше повідомлення на форумі.</p>
+            </div>
+            <div class="message">
+                <h3>УкрФут</h3>
+                <p>Поверніть Петракова!</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="messageAuthor">Ваше ім'я:</label>
+            <input type="text" id="messageAuthor">
+        </div>
+        <div class="form-group">
+            <label for="messageText">Повідомлення:</label>
+            <textarea id="messageText" rows="4"></textarea>
+        </div>
+        <button onclick="addMessage()">Додати повідомлення</button>
+    </div>
+
+    <!-- Завдання 9 -->
+    <div class="task">
+        <h2>Завдання 9: Список книг</h2>
+        <ul class="book-list" id="bookList">
+            <li class="book-item" onclick="selectBook(this)">1. «Я - Златан» Златан Ібрагімович</li>
+            <li class="book-item" onclick="selectBook(this)">2. «Гордість і упередження» Джейн Остін</li>
+            <li class="book-item" onclick="selectBook(this)">3. «Тореадори з Васюківки» Всеволод Нестайко</li>
+            <li class="book-item" onclick="selectBook(this)">4. «Автостопом по галактиці» Дуглас Адамс</li>
+            <li class="book-item" onclick="selectBook(this)">5. «Алхімік» Пауло Коельо</li>
+            <li class="book-item" onclick="selectBook(this)">6. «Вбити пересмішника» Харпер Лі</li>
+        </ul>
+    </div>
+
+    <!-- Завдання 10 -->
+    <div class="task">
+        <h2>Завдання 10: Кнопка, що тікає</h2>
+        <div class="runaway-container" id="runawayContainer">
+            <button class="runaway-btn" id="runawayBtn" onmouseover="moveRunawayBtn()">Натисни мене</button>
+        </div>
+    </div>
+
+    <script>
+        // Завдання 1: Таблиця користувачів
+        function addUser() {
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
+            
+            if (!firstName || !lastName) {
+                alert("Будь ласка, введіть ім'я та прізвище");
+                return;
+            }
+            
+            const table = document.getElementById("usersTable").getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+            
+            cell1.textContent = table.rows.length;
+            cell2.textContent = firstName;
+            cell3.textContent = lastName;
+            
+            document.getElementById("firstName").value = "";
+            document.getElementById("lastName").value = "";
+        }
+
+        // Завдання 2: Бінарні квадратики
+        function createBinarySquares() {
+            const input = document.getElementById("binaryInput").value;
+            const container = document.getElementById("binaryContainer");
+            container.innerHTML = "";
+            
+            for (let char of input) {
+                if (char === '0' || char === '1') {
+                    const square = document.createElement("div");
+                    square.className = "binary-square";
+                    square.style.backgroundColor = char === '1' ? '#000' : '#fff';
+                    container.appendChild(square);
+                }
+            }
+        }
+
+        // Завдання 3: Палітра кольорів
+        const colorPalette = document.getElementById("colorPalette");
+        const colorRectangle = document.getElementById("colorRectangle");
+        const selectedColors = [];
+        
+        colorPalette.addEventListener('click', function(e) {
+            if (e.target.classList.contains('color-box')) {
+                const color = e.target.style.backgroundColor;
+                const index = selectedColors.indexOf(color);
+                
+                if (index === -1) {
+                    selectedColors.push(color);
+                    e.target.style.border = "3px solid #000";
+                } else {
+                    selectedColors.splice(index, 1);
+                    e.target.style.border = "1px solid #000";
+                }
+                
+                updateRectangleColor();
+            }
+        });
+        
+        function updateRectangleColor() {
+            if (selectedColors.length === 0) {
+                colorRectangle.style.background = "";
+            } else if (selectedColors.length === 1) {
+                colorRectangle.style.background = selectedColors[0];
+            } else {
+                const gradient = `linear-gradient(to right, ${selectedColors.join(', ')})`;
+                colorRectangle.style.background = gradient;
+            }
+        }
+
+        // Завдання 4: Редагування блоків
+        function editBlock(blockId) {
+            const block = document.getElementById(blockId);
+            const text = block.querySelector('p').textContent;
+            
+            block.innerHTML = `
+                <textarea id="editText" rows="4" style="width: 100%;">${text}</textarea>
+                <button onclick="saveBlock('${blockId}')">Зберегти</button>
+                <button onclick="cancelEdit('${blockId}', '${text}')">Скасувати</button>
+            `;
+        }
+        
+        function saveBlock(blockId) {
+            const block = document.getElementById(blockId);
+            const newText = block.querySelector('textarea').value;
+            
+            block.innerHTML = `
+                <p>${newText}</p>
+                <button onclick="editBlock('${blockId}')">Редагувати</button>
+                <button onclick="deleteBlock('${blockId}')">Видалити</button>
+            `;
+        }
+        
+        function cancelEdit(blockId, originalText) {
+            const block = document.getElementById(blockId);
+            
+            block.innerHTML = `
+                <p>${originalText}</p>
+                <button onclick="editBlock('${blockId}')">Редагувати</button>
+                <button onclick="deleteBlock('${blockId}')">Видалити</button>
+            `;
+        }
+        
+        function deleteBlock(blockId) {
+            document.getElementById(blockId).remove();
+        }
+
+        // Завдання 5: Малювання кольором
+        const drawingPalette = document.getElementById("drawingPalette");
+        const drawingCanvas = document.getElementById("drawingCanvas");
+        let selectedColor = '#000000';
+        
+        // Створення полотна
+        for (let i = 0; i < 400; i++) {
+            const pixel = document.createElement("div");
+            pixel.className = "pixel";
+            pixel.addEventListener('click', function() {
+                this.style.backgroundColor = selectedColor;
+            });
+            drawingCanvas.appendChild(pixel);
+        }
+        
+        // Вибір кольору
+        drawingPalette.addEventListener('click', function(e) {
+            if (e.target.classList.contains('color-box')) {
+                selectedColor = e.target.style.backgroundColor;
+                
+                // Знімаємо виділення з усіх кольорів
+                document.querySelectorAll('#drawingPalette .color-box').forEach(box => {
+                    box.style.border = "1px solid #000";
+                });
+                
+                // Виділяємо вибраний колір
+                e.target.style.border = "3px solid #000";
+            }
+        });
+
+        // Завдання 6: Гральні карти
+        function flipCard(card) {
+            card.style.transform = card.style.transform === "rotateY(180deg)" ? "" : "rotateY(180deg)";
+        }
+
+        // Завдання 7: Перетягування елементів
+        const draggableBox = document.getElementById("draggableBox");
+        const dragContainer = document.getElementById("dragContainer");
+        
+        draggableBox.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('text/plain', null);
+        });
+        
+        dragContainer.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+        
+        dragContainer.addEventListener('drop', function(e) {
+            e.preventDefault();
+            
+            const containerRect = dragContainer.getBoundingClientRect();
+            const boxWidth = draggableBox.offsetWidth;
+            const boxHeight = draggableBox.offsetHeight;
+            
+            let x = e.clientX - containerRect.left - boxWidth / 2;
+            let y = e.clientY - containerRect.top - boxHeight / 2;
+            
+            // Обмеження, щоб не виходив за межі контейнера
+            x = Math.max(0, Math.min(x, containerRect.width - boxWidth));
+            y = Math.max(0, Math.min(y, containerRect.height - boxHeight));
+            
+            draggableBox.style.left = x + 'px';
+            draggableBox.style.top = y + 'px';
+        });
+
+        // Завдання 8: Форум
+        function addMessage() {
+            const author = document.getElementById("messageAuthor").value;
+            const text = document.getElementById("messageText").value;
+            
+            if (!author || !text) {
+                alert("Будь ласка, введіть ім'я та повідомлення");
+                return;
+            }
+            
+            const messagesContainer = document.getElementById("forumMessages");
+            const newMessage = document.createElement("div");
+            newMessage.className = "message";
+            newMessage.innerHTML = `
+                <h3>${author}</h3>
+                <p>${text}</p>
+            `;
+            
+            messagesContainer.appendChild(newMessage);
+            
+            document.getElementById("messageAuthor").value = "";
+            document.getElementById("messageText").value = "";
+        }
+
+        // Завдання 9: Список книг
+        function selectBook(bookItem) {
+            // Знімаємо виділення з усіх книг
+            document.querySelectorAll('.book-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Виділяємо вибрану книгу
+            bookItem.classList.add('selected');
+        }
+
+        // Завдання 10: Кнопка, що тікає
+        function moveRunawayBtn() {
+            const container = document.getElementById("runawayContainer");
+            const btn = document.getElementById("runawayBtn");
+            
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+            const btnWidth = btn.offsetWidth;
+            const btnHeight = btn.offsetHeight;
+            
+            const maxX = containerWidth - btnWidth;
+            const maxY = containerHeight - btnHeight;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+        }
+    </script>
+</body>
+</html>

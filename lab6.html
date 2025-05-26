@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Лабораторна №6</title>
+  <style>
+    .preview-img { width: 100px; cursor: pointer; margin: 5px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    td, th { border: 1px solid black; padding: 5px; }
+    .shape { margin: 10px; display: inline-block; }
+  </style>
+</head>
+<body>
+
+<h2>Завдання 1. Cookie (історія змін)</h2>
+<button onclick="prevText()">⬆️</button>
+<button onclick="nextText()">⬇️</button><br>
+<textarea id="historyArea" rows="4" cols="50" oninput="saveToHistory()"></textarea>
+
+<h2>Завдання 2. LocalStorage (відновлення форми)</h2>
+<form id="userForm">
+  <input type="text" name="name" placeholder="Ім'я"><br>
+  <textarea name="comment" placeholder="Коментар"></textarea><br>
+  <label><input type="checkbox" name="agree"> Згоден</label><br>
+  <select name="option">
+    <option value="a">Варіант A</option>
+    <option value="b">Варіант B</option>
+  </select>
+</form>
+
+<h2>Завдання 3. JSON (галерея зображень)</h2>
+<input type="text" id="jsonInput" placeholder='["img1.jpg", "img2.jpg"]'>
+<button onclick="showImages()">Показати</button>
+<div id="jsonGallery"></div>
+
+<h2>Завдання 4. Класи</h2>
+<div id="studentsTable"></div>
+<p>Загальний середній бал: <span id="groupAvg"></span></p>
+
+<h2>Завдання 5. Статичні методи</h2>
+<p>Фарба: <span id="paintLevel">0</span>%</p>
+<button onclick="Shape.fill()">Заправити фарбу</button>
+<button onclick="drawCircle()">Намалювати коло</button>
+<button onclick="drawSquare()">Намалювати квадрат</button>
+<div id="shapes"></div>
+
+<h2>Завдання 6. Fetch API</h2>
+<button onclick="loadDogs()">Завантажити собак</button>
+<div id="dogsGallery"></div>
+
+<script>
+// Завдання 1 — Cookie
+let history = [];
+let index = -1;
+function saveToHistory() {
+  const val = document.getElementById("historyArea").value;
+  if (val !== history[history.length - 1]) {
+    history.push(val);
+    document.cookie = "history=" + encodeURIComponent(JSON.stringify(history));
+    index = history.length - 1;
+  }
+}
+function prevText() {
+  if (index > 0) {
+    index--;
+    document.getElementById("historyArea").value = history[index];
+  }
+}
+function nextText() {
+  if (index < history.length - 1) {
+    index++;
+    document.getElementById("historyArea").value = history[index];
+  }
+}
+window.onload = function () {
+  const cookie = document.cookie.split("; ").find(row => row.startsWith("history="));
+  if (cookie) {
+    history = JSON.parse(decodeURIComponent(cookie.split("=")[1]));
+    index = history.length - 1;
+    document.getElementById("historyArea").value = history[index] || "";
+  }
+};
+
+// Завдання 2 — LocalStorage
+const form = document.getElementById("userForm");
+form.addEventListener("input", () => {
+  const data = {};
+  [...form.elements].forEach(el => {
+    if (el.type === "checkbox") data[el.name] = el.checked;
+    else data[el.name] = el.value;
+  });
+  localStorage.setItem("formData", JSON.stringify(data));
+});
+window.addEventListener("load", () => {
+  const saved = JSON.parse(localStorage.getItem("formData"));
+  if (saved) {
+    [...form.elements].forEach(el => {
+      if (el.name in saved) {
+        if (el.type === "checkbox") el.checked = saved[el.name];
+        else el.value = saved[el.name];
+      }
+    });
+  }
+});
+
+// Завдання 3 — JSON
+function showImages() {
+  const input = document.getElementById("jsonInput").value;
+  const gallery = document.getElementById("jsonGallery");
+  gallery.innerHTML = "";
+  try {
+    const files = JSON.parse(input);
+    files.forEach(file => {
+      const img = document.createElement("img");
+      img.src = file;
+      img.className = "preview-img";
+      img.onclick = () => window.open(file, "_blank");
+      gallery.appendChild(img);
+    });
+  } catch {
+    alert("Неправильний формат JSON");
+  }
+}
+
+// Завдання 4 — Класи
+class Student {
+  constructor(lastName, firstName, grades) {
+    this.lastName = lastName;
+    this.firstName = firstName;
+    this.grades = grades;
+  }
+}
+class ListOfStudents {
+  constructor(students) {
+    this.students = students;
+  }
+  getTableList() {
+    let html = "<table><tr><th>Прізвище</th><th>Ім'я</th><th>Оцінки</th></tr>";
+    this.students.forEach(s => {
+      html += `<tr><td>${s.lastName}</td><td>${s.firstName}</td><td>${s.grades.join(", ")}</td></tr>`;
+    });
+    html += "</table>";
+    return html;
+  }
+}
+class StylesTable extends ListOfStudents {
+  getStyles() {
+    return "<style>table { background: #eef; }</style>";
+  }
+  getAvg() {
+    return this.students.map(s => {
+      const avg = s.grades.reduce((a, b) => a + b, 0) / s.grades.length;
+      return { ...s, avg: avg.toFixed(2) };
+    });
+  }
+  getTableList() {
+    const styled = this.getAvg();
+    let html = this.getStyles() + "<table><tr><th>Прізвище</th><th>Ім'я</th><th>Оцінки</th><th>Середній бал</th></tr>";
+    styled.forEach(s => {
+      html += `<tr><td>${s.lastName}</td><td>${s.firstName}</td><td>${s.grades.join(", ")}</td><td>${s.avg}</td></tr>`;
+    });
+    html += "</table>";
+    return html;
+  }
+  getTotalAvg() {
+    const all = this.students.flatMap(s => s.grades);
+    const avg = all.reduce((a, b) => a + b, 0) / all.length;
+    return avg.toFixed(2);
+  }
+}
+const students = [
+  new Student("Петраков", "Олександр", [10, 7, 8]),
+  new Student("Гавриленко", "Єлизавета", [11, 10, 12]),
+];
+const styledList = new StylesTable(students);
+document.getElementById("studentsTable").innerHTML = styledList.getTableList();
+document.getElementById("groupAvg").textContent = styledList.getTotalAvg();
+
+// Завдання 5 — Статичні методи
+class Shape {
+  static total = 0;
+  static fill() {
+    Shape.total = 100;
+    document.getElementById("paintLevel").textContent = Shape.total;
+  }
+  constructor(a) {
+    this.a = a;
+  }
+  draw(type) {
+    if (Shape.total < 10) {
+      alert("Недостатньо фарби!");
+      return;
+    }
+    Shape.total -= 10;
+    document.getElementById("paintLevel").textContent = Shape.total;
+    const el = document.createElement("div");
+    el.className = "shape";
+    el.style.background = "blue";
+    if (type === "circle") {
+      el.style.borderRadius = "50%";
+      el.style.width = el.style.height = this.a + "px";
+    } else {
+      el.style.width = el.style.height = this.a + "px";
+    }
+    document.getElementById("shapes").appendChild(el);
+  }
+}
+function drawCircle() {
+  new Shape(50).draw("circle");
+}
+function drawSquare() {
+  new Shape(50).draw("square");
+}
+
+// Завдання 6 — Fetch API
+function loadDogs() {
+  const container = document.getElementById("dogsGallery");
+  fetch("https://dog.ceo/api/breeds/image/random")
+    .then(res => res.json())
+    .then(data => {
+      const img = document.createElement("img");
+      img.src = data.message;
+      img.style.width = "150px";
+      container.appendChild(img);
+    });
+}
+</script>
+
+</body>
+</html>

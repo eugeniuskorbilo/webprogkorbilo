@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №1 - JavaScript</title>
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #output {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .task {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лабораторна робота №1</h1>
+    <h2>Базові конструкції JavaScript</h2>
+
+    <div class="task">
+        <h3>Завдання 1.1: Бургери та решта</h3>
+        <button onclick="task1()">Виконати</button>
+        <div id="output1"></div>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.2: Переміщення останньої цифри</h3>
+        <button onclick="task2()">Виконати</button>
+        <div id="output2"></div>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.3: Попередня та наступна дата</h3>
+        <button onclick="task3()">Виконати</button>
+        <div id="output3"></div>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.4: Вік та правильний відмінок</h3>
+        <button onclick="task4()">Виконати</button>
+        <div id="output4"></div>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.5: Калькулятор з циклом</h3>
+        <button onclick="task5()">Виконати</button>
+        <div id="output5"></div>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.6: Сума введених чисел</h3>
+        <button onclick="task6()">Виконати</button>
+        <div id="output6"></div>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.7: Піднесення до степеня</h3>
+        <button onclick="task7()">Виконати</button>
+        <div id="output7"></div>
+    </div>
+
+    <script>
+        // Завдання 1.1: Бургери та решта
+        function task1() {
+            let money = parseFloat(prompt("Введіть суму грошей у гаманці:"));
+            let burgerPrice = parseFloat(prompt("Введіть ціну одного бургера:"));
+
+            if (isNaN(money) || isNaN(burgerPrice)) {
+                document.getElementById("output1").innerHTML = "Будь ласка, введіть коректні числа!";
+            } else {
+                let burgers = Math.floor(money / burgerPrice);
+                let change = (money % burgerPrice).toFixed(2);
+                document.getElementById("output1").innerHTML = 
+                    `Ви можете купити ${burgers} бургерів. Решта: ${change} грн.`;
+            }
+        }
+
+        // Завдання 1.2: Переміщення останньої цифри
+        function task2() {
+            let number = prompt("Введіть п'ятизначне число:");
+            if (number.length !== 5 || isNaN(number)) {
+                document.getElementById("output2").innerHTML = "Будь ласка, введіть п'ятизначне число!";
+            } else {
+                let lastDigit = number.slice(-1);
+                let newNumber = lastDigit + number.slice(0, -1);
+                document.getElementById("output2").innerHTML = 
+                    `Оригінальне число: ${number}<br>Нове число: ${newNumber}`;
+            }
+        }
+
+        // Завдання 1.3: Попередня та наступна дата
+        function task3() {
+            let day = parseInt(prompt("Введіть день (1-31):"));
+            let month = parseInt(prompt("Введіть місяць (1-12):"));
+            let year = parseInt(prompt("Введіть рік:"));
+
+            let date = new Date(year, month - 1, day);
+            
+            // Наступна дата
+            let nextDate = new Date(date);
+            nextDate.setDate(date.getDate() + 1);
+            
+            // Попередня дата
+            let prevDate = new Date(date);
+            prevDate.setDate(date.getDate() - 1);
+            
+            document.getElementById("output3").innerHTML = 
+                `Введена дата: ${date.toLocaleDateString()}<br>
+                 Наступна дата: ${nextDate.toLocaleDateString()}<br>
+                 Попередня дата: ${prevDate.toLocaleDateString()}`;
+        }
+
+        // Завдання 1.4: Вік та правильний відмінок
+        function task4() {
+            let age = parseInt(prompt("Введіть вік (1-69):"));
+            if (age < 1 || age > 69 || isNaN(age)) {
+                document.getElementById("output4").innerHTML = "Будь ласка, введіть вік від 1 до 69!";
+            } else {
+                let lastDigit = age % 10;
+                let suffix;
+                if (age >= 11 && age <= 14) {
+                    suffix = "років";
+                } else if (lastDigit === 1) {
+                    suffix = "рік";
+                } else if (lastDigit >= 2 && lastDigit <= 4) {
+                    suffix = "роки";
+                } else {
+                    suffix = "років";
+                }
+                document.getElementById("output4").innerHTML = `${age} ${suffix}`;
+            }
+        }
+
+        // Завдання 1.5: Калькулятор з циклом
+        function task5() {
+            let output = "";
+            let continueCalculation = true;
+
+            while (continueCalculation) {
+                let num1 = parseFloat(prompt("Введіть перше число:"));
+                let num2 = parseFloat(prompt("Введіть друге число:"));
+                let operator = prompt("Введіть знак (+, -, *, /):");
+
+                let result;
+                switch (operator) {
+                    case '+': result = num1 + num2; break;
+                    case '-': result = num1 - num2; break;
+                    case '*': result = num1 * num2; break;
+                    case '/': result = num1 / num2; break;
+                    default: result = "Невірний оператор!";
+                }
+                output += `${num1} ${operator} ${num2} = ${result}<br>`;
+                continueCalculation = confirm("Бажаєте вирішити ще один приклад?");
+            }
+
+            document.getElementById("output5").innerHTML = output || "Калькулятор завершив роботу.";
+        }
+
+        // Завдання 1.6: Сума введених чисел
+        function task6() {
+            let numbers = [];
+            let sum = 0;
+            let input;
+
+            do {
+                input = parseFloat(prompt("Введіть число (0 для завершення):"));
+                if (!isNaN(input) && input !== 0) {
+                    numbers.push(input);
+                    sum += input;
+                }
+            } while (input !== 0);
+
+            document.getElementById("output6").innerHTML = 
+                `${numbers.join(" + ")} + 0 = ${sum}`;
+        }
+
+        // Завдання 1.7: Піднесення до степеня
+        function task7() {
+            let S = prompt("Введіть число S (мінімум 2 цифри):");
+            let K = parseInt(prompt("Введіть цифру K:"));
+
+            if (S.length < 2 || isNaN(K)) {
+                document.getElementById("output7").innerHTML = 
+                    "Помилка: S має містити щонайменше 2 цифри, K має бути цифрою!";
+            } else {
+                let secondDigit = parseInt(S[1]);
+                let result = Math.pow(secondDigit, K);
+                document.getElementById("output7").innerHTML = 
+                    `Друга цифра числа ${S} (${secondDigit}) у степені ${K} = ${result}`;
+            }
+        }
+    </script>
+</body>
+</html>
